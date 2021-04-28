@@ -349,7 +349,7 @@ async function writeDocument(urls, dateNow) {
 
 // serve index.html with choo app
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'index.html'))
+  res.sendFile(path.resolve(__dirname, settings.app_html))
 })
 
 
