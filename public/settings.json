@@ -11,6 +11,9 @@
   "donateButton": true,
   "stream": {
     "active": true,
-    "testmode": true
-  }
+    "testmode": true,
+    "url": "/"
+  },
+  "base_url": "https://live.thehmm.nl",
+  "app_html": "hmm.html"
 }
