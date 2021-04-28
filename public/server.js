@@ -17,7 +17,10 @@ const socket = require('socket.io')(http)
 const nunjucks = require('nunjucks')
 
 app.use('/assets', express.static(path.resolve(__dirname, 'assets')))
-app.use(express.static(path.resolve(__dirname, 'files')))
+app.use(express.static(path.resolve(__dirname, 'files'), {
+	setHeaders: (res, path) => {
+		res.set("Content-Disposition", "attachment")
+	}}));
 app.use(express.json())
 
 app.set('trust proxy', 'loopback');
