@@ -35,7 +35,7 @@ function view (state, emit) {
     if (settings.logo) {
       return html`
         <figure class="psr oh tac pt1">
-         <img src="/assets/logo.png" style="max-width: 100%; max-height: 9rem"> 
+         <img src="/assets/${settings.logo}" style="max-width: 100%; max-height: 9rem"> 
         </figure>
       `
     } else {
