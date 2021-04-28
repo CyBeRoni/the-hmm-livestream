@@ -9,6 +9,7 @@ const donate = new Donate()
 const Ticker = require('../components/ticker')
 const Viewers = require('../components/viewers')
 const viewers = new Viewers()
+const ticker_string = "The Hmm ON alt platforms |"
 
 function view (state, emit) {
   console.log(state)
@@ -46,13 +47,13 @@ function view (state, emit) {
     const tickerB = state.cache(Ticker, '01-b')
     return html`
       <main class="x xdc">
-        ${tickerT.render(state, emit, {string: 'The Hmm @ Hackers & Designers |', n: 15, side: 'top'})}
+        ${tickerT.render(state, emit, {string: ticker_string, n: 15, side: 'top'})}
         <div class="psr x xdc md-xdr xafe w--full bgc-bk">
           <div class="z2 psa t0 l0 fc-yl p0-5">${video.stream !== null ? video.stream.status : '...'}</div>
           ${videoBlock(video)}
           ${chatBox(state, emit)}
         </div>
-        ${tickerB.render(state, emit, {string: 'The Hmm @ Hackers & Designers |', n: 15, side: 'bottom'})} 
+        ${tickerB.render(state, emit, {string: ticker_string, n: 15, side: 'bottom'})} 
       </main>
     `
   }

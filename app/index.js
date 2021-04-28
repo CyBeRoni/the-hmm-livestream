@@ -9,7 +9,8 @@ app.use(devtools())
 
 app.use(require('./stores/stream'))
 
-app.route('/', require('./views/main'))
+app.route('/ONaltplatforms', require('./views/main'))
+//app.route('/', require('./views/main'))
 app.route('*', require('./views/notfound'))
 
 if (!module.parent) app.mount('body')

@@ -68,7 +68,7 @@ const createLiveStream = async () => {
 
   // create a new live stream!
   return await Video.LiveStreams.create({
-    test: true,
+    test: process.env.MUX_TEST || false,
     playback_policy: 'public',
     reconnect_window: 10,
     new_asset_settings: { playback_policy: 'public' } 
@@ -102,8 +102,43 @@ const publicStreamDetails = stream => ({
 
 
 // setup db
-const adapter = new FileAsync('./.data/db.json')
+const adapter = new FileAsync('./.data/db.json', {
+	defaultValue: {posts: [{ username: "The Hmm", timestamp: "2021-01-01T00:00:00Z", value: "Welcome!"}] }
+});
 
+app.get('/posts', async (req, res) => {
+	db(adapter).then(db => {
+		const posts = db.get('posts');
+		res.send(posts);
+	});
+});
+
+socket.on('connection', async (sock) => {
+	const userCount = sock.client.conn.server.clientsCount
+	console.log('a user connected, total user', userCount)
+	socket.emit('user-count',  userCount)
+
+	sock.on('disconnect', () => {
+		console.log('a user disconnected, total user', userCount -1)
+		socket.emit('user-count',  userCount -1)
+	})
+
+	sock.on('chat-msg', async (msg) => {
+		console.log('msg', msg)
+		socket.emit('chat-msg', msg)
+
+		const data = await db(adapter);
+
+		return await data.get('posts')
+  		    		  .push(msg)
+		    		  .last()
+		    		  .write()
+	});
+});
+	
+
+/*
+//
 // -- wrap low.db around endpoints
 db(adapter)
   .then(db => {
@@ -138,12 +173,7 @@ db(adapter)
     })
     
   })
-
-// serve index.html with choo app
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'index.html'))
-})
-
+*/
 // -- /stream, bootstrap the live-stream
 app.get('/stream', async(req, res) => {
   const stream = await Video.LiveStreams.get(STREAM.id)
@@ -201,10 +231,18 @@ app.post('/donate/webhook', async(req, res) => {
   res.sendStatus(200)
 })
 
+
+// serve index.html with choo app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'))
+})
+
+
+
 // -- start
 initialize().then((stream) => {
-  const listener = http.listen(process.env.PORT || 4000, function() {
-    console.log('Your app is listening on port ' + listener.address().port)
+  const listener = http.listen(process.env.PORT || 4000, process.env.HOST || "127.0.0.1", function() {
+    console.log('Your app is listening on ' + listener.address().address + ':' + listener.address().port)
     console.log('HERE ARE YOUR STREAM DETAILS, KEEP THEM SECRET!')
     console.log(`Stream Key: ${stream.stream_key}`)
   })
