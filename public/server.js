@@ -94,7 +94,7 @@ const publicStreamDetails = stream => ({
 
 // setup db
 const adapter = new FileAsync('./.data/db.json', {
-	defaultValue: {posts: [{ username: "The Hmm", timestamp: "2021-01-01T00:00:00Z", value: "Welcome!"}] }
+	defaultValue: {posts: [{ username: settings.title, timestamp: "2021-01-01T00:00:00Z", value: "Welcome!"}] }
 });
 
 app.get('/posts', async (req, res) => {
@@ -192,11 +192,6 @@ nunjucks.configure('views', {
   express: app
 });
 
-// serve index.html with choo app
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'index.html'))
-})
-
 // -- /stream, bootstrap the live-stream
 app.get('/stream', async(req, res) => {
   const stream = await Video.LiveStreams.get(STREAM.id)
@@ -217,7 +212,7 @@ app.post('/mux-hook', (req, res) => {
   res.sendStatus(200)
 })
 
-if (settings.donate) {
+if (settings.donateButton) {
   const { createMollieClient } = require('@mollie/api-client');
   const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
@@ -234,7 +229,7 @@ if (settings.donate) {
           order_id: Buffer.from(new Date(), 'utf8').toString('hex'),
         },
         description: data.description,
-        redirectUrl: process.env.MOLLIE_REDIRECT_URL,
+        redirectUrl: settings.base_url + settings.stream.url,
         webhookUrl: process.env.MOLLIE_WEBHOOK_URL
       })
 
@@ -339,20 +334,16 @@ async function writeDocument(urls, dateNow) {
   // write chat-links.html export file to disk
   try {
     await fs.writeFile(path.resolve(__dirname, `${process.env.EXPORT_FOLDER}/${dateNow}.html`), chatLinksFile)
-
   } catch (err) {
     throw err
   }
 
 }
 
-
-// serve index.html with choo app
+// serve app html with choo app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, settings.app_html))
 })
-
-
 
 // -- start
 initialize().then((stream) => {
