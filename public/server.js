@@ -125,7 +125,7 @@ app.get('/api/get-chat-urls', async(req, res) => {
         const exportFolder = path.resolve(__dirname, process.env.EXPORT_FOLDER)
         await fsextra.ensureDir(exportFolder)
 
-        const posts = await db.get('posts').value()
+        const posts = (await db(adapter)).get('posts').value()
         const urls = getURLfromPost(posts)
 
         if (urls.length > 0) {
