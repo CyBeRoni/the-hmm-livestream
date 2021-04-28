@@ -20,6 +20,8 @@ app.use('/assets', express.static(path.resolve(__dirname, 'assets')))
 app.use(express.static(path.resolve(__dirname, 'files')))
 app.use(express.json())
 
+app.set('trust proxy', 'loopback');
+
 // storage configuration
 const stateFilePath = './.data/stream'
 
@@ -229,7 +231,7 @@ if (settings.donateButton) {
           order_id: Buffer.from(new Date(), 'utf8').toString('hex'),
         },
         description: data.description,
-        redirectUrl: settings.base_url + settings.stream.url,
+        redirectUrl: `http${req.secure ? "s":""}://${req.get('host')}${settings.stream.url}`,
         webhookUrl: process.env.MOLLIE_WEBHOOK_URL
       })
 
