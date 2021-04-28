@@ -13,6 +13,7 @@ const Ticker = require('../components/ticker')
 const Viewers = require('../components/viewers')
 const settings = require('../../public/settings.json')
 const viewers = new Viewers()
+const ticker_string = "The Hmm ON alt platforms |"
 
 function view (state, emit) {
   console.log(state)

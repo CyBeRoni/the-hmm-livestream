@@ -93,27 +93,27 @@ const publicStreamDetails = stream => ({
 
 
 // setup db
-const adapter = new FileAsync('./.data/db.json')
+const adapter = new FileAsync('./.data/db.json', {
+	defaultValue: {posts: [{ username: "The Hmm", timestamp: "2021-01-01T00:00:00Z", value: "Welcome!"}] }
+});
 
-// -- wrap low.db around endpoints
-db(adapter)
-  .then(db => {
-    // -- /posts
-    app.get('/posts', async(req, res) => {
-      const posts = db.get('posts').value()
-      res.send(posts)
-    })
+app.get('/posts', async (req, res) => {
+	db(adapter).then(db => {
+		const posts = db.get('posts').value();
+		res.send(posts);
+	});
+});
 
-    // -- /posts/urls
-    app.get('/posts/url', async(req, res) => {
-      const posts = db.get('posts').value()
-      const urls = getURLfromPost(posts)
+app.get('/posts/url', async(req, res) => {
+	db(adapter).then(db => {
+		const posts = db.get('posts').value();
+		const urls = getURLfromPost(posts);
 
-      res.send(urls)
-    })
+		res.send(urls)
+	});
+})
 
-    // -- /api/get-chat-urls, export all links shared in the chat
-    app.get('/api/get-chat-urls', async(req, res) => {
+app.get('/api/get-chat-urls', async(req, res) => {
       // 1. get posts
       // 2. parse all URLs
       // 3. create .html
@@ -125,7 +125,7 @@ db(adapter)
         const exportFolder = path.resolve(__dirname, process.env.EXPORT_FOLDER)
         await fsextra.ensureDir(exportFolder)
 
-        const posts = db.get('posts').value()
+        const posts = await db.get('posts').value()
         const urls = getURLfromPost(posts)
 
         if (urls.length > 0) {
@@ -160,34 +160,31 @@ db(adapter)
         })
       }
 
-    })
+});
 
-    // -- socket.io
-    socket.on('connection', (sock) => {
-      const userCount = sock.client.conn.server.clientsCount
-      console.log('a user connected, total user', userCount)
-      socket.emit('user-count',  userCount)
+socket.on('connection', async (sock) => {
+	const userCount = sock.client.conn.server.clientsCount
+	console.log('a user connected, total user', userCount)
+	socket.emit('user-count',  userCount)
 
-      sock.on('disconnect', () => {
-        console.log('a user disconnected, total user', userCount -1)
-        socket.emit('user-count',  userCount -1)
-      })
+	sock.on('disconnect', () => {
+		console.log('a user disconnected, total user', userCount -1)
+		socket.emit('user-count',  userCount -1)
+	})
 
-      sock.on('chat-msg', (msg) => {
-        console.log('msg', msg)
-        socket.emit('chat-msg', msg)
+	sock.on('chat-msg', async (msg) => {
+		console.log('msg', msg)
+		socket.emit('chat-msg', msg)
 
-        db.get('posts')
-          .push(msg)
-          .last()
-          .write()
-      })
+		const data = await db(adapter);
 
-      return db.defaults({posts: [] }).write()
-    })
-
-  })
-
+		return await data.get('posts')
+  		    		  .push(msg)
+		    		  .last()
+		    		  .write()
+	});
+});
+	
 
 // HTML templating
 nunjucks.configure('views', {
@@ -349,10 +346,18 @@ async function writeDocument(urls, dateNow) {
 
 }
 
+
+// serve index.html with choo app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'))
+})
+
+
+
 // -- start
 initialize().then((stream) => {
-  const listener = http.listen(process.env.PORT || 4000, function() {
-    console.log('Your app is listening on port ' + listener.address().port)
+  const listener = http.listen(process.env.PORT || 4000, process.env.HOST || "127.0.0.1", function() {
+    console.log('Your app is listening on ' + listener.address().address + ':' + listener.address().port)
     console.log('HERE ARE YOUR STREAM DETAILS, KEEP THEM SECRET!')
     console.log(`Stream Key: ${stream.stream_key}`)
   })
