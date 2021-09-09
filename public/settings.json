@@ -1,18 +1,19 @@
 {
-  "title": "Hackers & Designers livestream",
-  "headline": "Intersectional Search\nin Queer and Trans Archives",
+  "title": "The Hmm Live Stream",
+  "headline": "The Hmm",
   "ticker": {
-    "text": "4 November 2020, 19.00 - 21.30 |",
+    "text": "The Hmm @ Online Events | ",
     "backgroundColour": "#ffff00",
     "foregroundColour": "#000",
     "typeface": "Arial Rounded MT Bold"
   },
-  "logo": false,
+  "logo": "hmm.svg",
   "donateButton": true,
   "stream": {
     "active": true,
-    "testmode": true,
-    "url": "/"
+    "testmode": false,
+    "url": "/r34lf33lings"
   },
+  "chat_enabled": false,
   "app_html": "hmm.html"
 }
