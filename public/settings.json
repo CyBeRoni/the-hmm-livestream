@@ -2,7 +2,7 @@
   "title": "The Hmm Live Stream",
   "headline": "The Hmm",
   "ticker": {
-    "text": "The Hmm @ Online Events | ",
+    "text": "The Hmm @ Felix Meritis ON Screen New Deal | ",
     "backgroundColour": "#ffff00",
     "foregroundColour": "#000",
     "typeface": "Arial Rounded MT Bold"
@@ -12,8 +12,8 @@
   "stream": {
     "active": true,
     "testmode": false,
-    "url": "/r34lf33lings"
+    "url": "/ScreenNewDeal"
   },
-  "chat_enabled": false,
+  "chat_enabled": true,
   "app_html": "hmm.html"
 }
