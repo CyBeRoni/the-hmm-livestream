@@ -1,9 +1,10 @@
 function markdown (input) {
+  const emoji = require('markdown-it-emoji');
   const md = require('markdown-it')({
     breaks: true,
     typographer: true,
     linkify: true
-  })
+  }).use(emoji)
 
   // <https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer>
 
@@ -23,10 +24,10 @@ function markdown (input) {
 
       if (aIndex < 0) {
         // add new attribute
-        tokens[idx].attrPush(['target', '_blank']) 
+        tokens[idx].attrPush(['target', '_blank'])
       } else {
         // replace value of existing attr
-        tokens[idx].attrs[aIndex][1] = '_blank' 
+        tokens[idx].attrs[aIndex][1] = '_blank'
       }
 
       // pass token to default renderer
