@@ -22,19 +22,19 @@ function view (state, emit) {
       <header>
         ${header(settings)}
       </header>
-      ${content(state, emit)} 
+      ${content(state, emit)}
       <div class="x xdr xw xab xjb">
         ${donateButton(settings.donateButton)}
         ${viewers.render(state, emit, state.components.chat.userCount)}
       </div>
     </body>
-  ` 
+  `
 
   function header (settings) {
     if (settings.logo) {
       return html`
         <figure class="psr oh tac pt1">
-         <img src="/assets/${settings.logo}" style="max-width: 100%; max-height: 9rem"> 
+         <img src="/assets/${settings.logo}" style="max-width: 100%; max-height: 9rem">
         </figure>
       `
     } else {
@@ -55,7 +55,7 @@ function view (state, emit) {
 		  <button onclick=${toggleBox(emit)} type="button" class="z2 ft-ms curp${data.toggle ? ' psa t0 r0 pt0-25 pr0-25 pl0-5' : ' py1 w100'}">${data.toggle ? ' x' : 'Chat'}</button>
 		  ${chat.render(state, emit, data)}
 		</div>
-	      ` 
+	      `
 	    }
     } else {
 	return("");
@@ -76,13 +76,22 @@ function view (state, emit) {
       <main class="x xdc">
         ${tickerT.render(state, emit, {string: settings.ticker.text, n: 15, side: 'top'})}
         <div class="psr x xdc md-xdr xafe w--full bgc-bk">
-          <div class="z2 psa t0 l0 p0-5" style="color: ${settings.ticker.backgroundColour}">${video.stream !== null ? video.stream.status : '...'}</div>
+          ${videoStatus(video)}
           ${videoBlock(video)}
           ${chatBox(state, emit)}
         </div>
-        ${tickerB.render(state, emit, {string: settings.ticker.text, n: 15, side: 'bottom'})} 
+        ${tickerB.render(state, emit, {string: settings.ticker.text, n: 15, side: 'bottom'})}
       </main>
     `
+  }
+
+  function videoStatus(video){
+    if (video.stream !== null){
+      stat = video.stream.status;
+    } else {
+      stat = "...";
+    }
+    return html`<div class='z2 psa t0 l0 p0-5 ${stat === "active" ? "dn" : ""}' style="color: ${settings.ticker.backgroundColour}">${stat}</div>`
   }
 
   function toggleBox (emit) {
