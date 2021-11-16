@@ -6,7 +6,7 @@ const loadImage = img =>
     img.onerror = reject;
   });
 
-function appendMsg (el, msg, scroll = false) {
+function appendMsg (el, msg, scroll = true) {
   const newMsg = chatMsg(msg)
 
   el.append(newMsg)
