@@ -41,30 +41,6 @@ const stateFilePath = './.data/stream'
 // <https://stackoverflow.com/a/26345063>
 const URLmatch = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+")
 
-// authentication configuration
-const webhookUser = {
-  name: 'muxer',
-  pass: 'muxology',
-}
-
-// authentication middleware
-const auth = (req, res, next) => {
-  function unauthorized(res) {
-    res.set('WWW-Authenticate', 'Basic realm=Authorization Required')
-    return res.sendStatus(401)
-  }
-  const user = basicAuth(req)
-  console.log(user)
-  if (!user || !user.name || !user.pass) {
-    return unauthorized(res)
-  }
-  if (user.name === webhookUser.name && user.pass === webhookUser.pass) {
-    return next()
-  } else {
-    return unauthorized(res)
-  }
-}
-
 // creates a new live stream so we can get a stream key
 const createLiveStream = async () => {
   if (!process.env.MUX_TOKEN_ID || !process.env.MUX_TOKEN_SECRET) {
