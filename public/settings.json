@@ -15,5 +15,7 @@
     "url": "/ScreenNewDeal"
   },
   "chat_enabled": true,
-  "app_html": "hmm.html"
+  "app_html": "hmm.html",
+  "bttv_channel": 511158368
 }
+

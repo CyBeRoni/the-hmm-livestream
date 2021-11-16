@@ -15,14 +15,15 @@ const FileAsync = require('lowdb/adapters/FileAsync')
 const http = require('http').Server(app)
 const socket = require('socket.io')(http)
 const nunjucks = require('nunjucks')
-const { EmoteFetcher, EmoteParser } = require('@mkody/twitch-emoticons');
 const getURLfromPost = require('../app/utils/get-url-from-post')
+const { EmoteFetcher, EmoteParser } = require('@mkody/twitch-emoticons');
 
 const emote_fetcher = new EmoteFetcher();
 const emote_parser = new EmoteParser(emote_fetcher, {
   type: 'markdown',
   match: /:?(\w+):?/g
 });
+
 
 
 app.use('/assets', express.static(path.resolve(__dirname, 'assets')))
@@ -94,9 +95,11 @@ const initialize = async() => {
     await fs.writeFile(stateFilePath, JSON.stringify(STREAM))
   }
 
-  emote_fetcher.fetchBTTVEmotes(511158368).then(() => {
-    console.log("Fetched BTTV emotes");
-  });
+  if (settings.bttv_channel){
+    emote_fetcher.fetchBTTVEmotes(settings.bttv_channel).then(() => {
+      console.log(`Fetched BTTV emotes for channel ${settings.bttv_channel}`);
+    });
+  }
 
   return STREAM
 }
@@ -192,8 +195,9 @@ socket.on('connection', async (sock) => {
 	})
 
 	sock.on('chat-msg', async (msg) => {
-    const parsed = emote_parser.parse(msg.value, 1);
-    msg.value = parsed
+    if (settings.bttv_channel){
+      msg.value = emote_parser.parse(msg.value, 1);
+    }
 
 		console.log('msg', msg)
 		socket.emit('chat-msg', msg)
