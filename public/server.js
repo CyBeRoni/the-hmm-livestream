@@ -15,6 +15,15 @@ const FileAsync = require('lowdb/adapters/FileAsync')
 const http = require('http').Server(app)
 const socket = require('socket.io')(http)
 const nunjucks = require('nunjucks')
+const { EmoteFetcher, EmoteParser } = require('@mkody/twitch-emoticons');
+const getURLfromPost = require('../app/utils/get-url-from-post')
+
+const emote_fetcher = new EmoteFetcher();
+const emote_parser = new EmoteParser(emote_fetcher, {
+  type: 'markdown',
+  match: /:?(\w+):?/g
+});
+
 
 app.use('/assets', express.static(path.resolve(__dirname, 'assets')))
 app.use(express.static(path.resolve(__dirname, 'files'), {
@@ -67,11 +76,11 @@ const createLiveStream = async () => {
     test: settings.stream.testmode,
     playback_policy: 'public',
     reconnect_window: 10,
-    new_asset_settings: { playback_policy: 'public' } 
+    new_asset_settings: { playback_policy: 'public' }
   })
 }
 
-// reads a state file looking for an existing live stream, if it can't find one, 
+// reads a state file looking for an existing live stream, if it can't find one,
 // creates a new one, saving the new live stream to our state file and global stream variable.
 const initialize = async() => {
   try {
@@ -84,6 +93,11 @@ const initialize = async() => {
     STREAM = await createLiveStream()
     await fs.writeFile(stateFilePath, JSON.stringify(STREAM))
   }
+
+  emote_fetcher.fetchBTTVEmotes(511158368).then(() => {
+    console.log("Fetched BTTV emotes");
+  });
+
   return STREAM
 }
 
@@ -122,7 +136,7 @@ app.get('/api/get-chat-urls', async(req, res) => {
       // 1. get posts
       // 2. parse all URLs
       // 3. create .html
-      // 4. send back URL download 
+      // 4. send back URL download
 
       try {
 
@@ -142,7 +156,7 @@ app.get('/api/get-chat-urls', async(req, res) => {
           const exportFiles = await fs.readdir(exportFolder)
 
           const localhost = `http://${req.get('host')}`
-          const documentURL = await exportDoc(exportFiles, exportFolder, posts, localhost) 
+          const documentURL = await exportDoc(exportFiles, exportFolder, posts, localhost)
 
           res.send({
             url: documentURL
@@ -178,18 +192,21 @@ socket.on('connection', async (sock) => {
 	})
 
 	sock.on('chat-msg', async (msg) => {
+    const parsed = emote_parser.parse(msg.value, 1);
+    msg.value = parsed
+
 		console.log('msg', msg)
 		socket.emit('chat-msg', msg)
 
 		const data = await db(adapter);
 
 		return await data.get('posts')
-  		    		  .push(msg)
-		    		  .last()
-		    		  .write()
+  		    		       .push(msg)
+		    		         .last()
+		    		         .write()
 	});
 });
-	
+
 
 // HTML templating
 nunjucks.configure('views', {
@@ -209,7 +226,7 @@ app.get('/stream', async(req, res) => {
 app.post('/mux-hook', (req, res) => {
   console.log('mux-hook =>', req.body)
   STREAM.status = req.body.data.status
-  
+
   if (req.body.type === 'video.live_stream.idle' || req.body.type === 'video.live_stream.active') {
     socket.emit('stream-update', publicStreamDetails(STREAM))
   }
@@ -253,23 +270,9 @@ if (settings.donateButton) {
     // const payment = await mollieClient.payments.get(req.body.orderId)
     // const data = await payment.json()
     // console.log(data)
-    
+
     res.sendStatus(200)
   })
-}
-
-function getURLfromPost(posts) {
-  const urls = []
-
-  posts.map(post => {
-    return post.value.match(URLmatch)
-  }).filter(item => {
-    if (item !== null) {
-      urls.push(item[0])
-    }
-  })
-
-  return urls
 }
 
 async function exportDoc(exportFiles, exportFolder, posts, localhost) {
@@ -281,12 +284,12 @@ async function exportDoc(exportFiles, exportFolder, posts, localhost) {
   const date = new Date();
   const dateNow = date.toISOString().replace(/:/g, '').split('.')[0]
 
-  // if there's already one or more file exported, 
+  // if there's already one or more file exported,
   // do timestamp comparison b/t file mtime and chat last msg timestamp
   // in order to decide if exporting a newer version of the doc or not
   if (exportFiles.length > 0) {
 
-    // get latest exported file 
+    // get latest exported file
     // and fetch stats (eg file modified timestamp => mtime)
     const exportFileLast = exportFiles[exportFiles.length -1]
     const exportFileStat = await fs.stat(path.resolve(exportFolder, exportFileLast))
@@ -294,16 +297,16 @@ async function exportDoc(exportFiles, exportFolder, posts, localhost) {
     // get last chat msg
     const chatMsgLast = posts[posts.length -1]
 
-    console.log(chatMsgLast.value.match(URLmatch) === null, 
-      new Date(chatMsgLast.timestamp), '>', new Date(exportFileStat['mtime']), '=>', 
-      new Date(chatMsgLast.timestamp) > new Date(exportFileStat['mtime']))
+    // console.log(chatMsgLast.value.match(URLmatch) === null,
+    //   new Date(chatMsgLast.timestamp), '>', new Date(exportFileStat['mtime']), '=>',
+    //   new Date(chatMsgLast.timestamp) > new Date(exportFileStat['mtime']))
 
     // check if chat-last-msg contains one or more URLs,
     // and if chat-last-mgs timestamp is newer than chat-list.html export time
     if (chatMsgLast.value.match(URLmatch) !== null && new Date(chatMsgLast.timestamp) > new Date(exportFileStat['mtime'])) {
 
       const urls = getURLfromPost(posts)
-      console.log('urls =>', urls)
+      // console.log('urls =>', urls)
       await writeDocument(urls, dateNow)
 
       const documentURL = `${localhost}/${exportURLfragment}/${dateNow}.html`
@@ -330,7 +333,7 @@ async function exportDoc(exportFiles, exportFolder, posts, localhost) {
 async function writeDocument(urls, dateNow) {
 
   const chatLinksFile = nunjucks.render('chat-urls.html', {
-    title: settings.title, 
+    title: settings.title,
     headline: settings.headline.replace(/\n/g, ' '),
     date: dateNow,
     urls: urls
