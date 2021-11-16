@@ -1,6 +1,7 @@
 const io = require('socket.io-client')
 const socket = io()
 const appendMsg = require('../utils/appendMsg')
+const getURLfromPost = require('../utils/get-url-from-post');
 
 function stream (state, emitter) {
   state.components.socket = socket
@@ -10,7 +11,7 @@ function stream (state, emitter) {
     controls: false,
     muted: true,
     hls: null
-  } 
+  }
 
   state.components.ticker = []
 
@@ -37,7 +38,7 @@ function stream (state, emitter) {
       if (data.status === 'active') {
         state.components.video.controls = true
       }
-      
+
       emitter.emit('render')
     } else {
       return stream.status
@@ -78,11 +79,12 @@ function stream (state, emitter) {
     appendMsg(chatList, msg)
 
     // update URL list too
-    const URLmatch = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+")
-    const postURL = msg.value.match(URLmatch)
+    const postURLs = getURLfromPost([msg]);
 
-    if (postURL !== null) {
-      state.components.chat.urls.push(postURL[0])
+    if (postURLs.length > 0) {
+      postURLs.forEach(url => {
+        state.components.chat.urls.push(url);
+      });
       emitter.emit('render')
     }
 
@@ -107,7 +109,6 @@ function stream (state, emitter) {
 
   socket.on('user-count', (count) => {
     state.components.chat.userCount = count
-    document.querySelector('.user-count > span').innerText = count
   })
 
   socket.on('stream-update', (stream) => {
