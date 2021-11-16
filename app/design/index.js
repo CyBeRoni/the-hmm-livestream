@@ -35,7 +35,9 @@ var color = {
     { yl: 'var(--c-yl)' },
     { db: 'var(--c-db)' },
     { bl: 'var(--c-bl)' },
-    { bk: 'var(--c-bk)' }
+    { bk: 'var(--c-bk)' },
+    { gr5: 'var(--c-gr5)'},
+    { gr9: 'var(--c-gr9)'},
   ],
   join: '-'
 }
