@@ -18,6 +18,7 @@
     "gr8": "^3.1.5",
     "hls.js": "^0.13.2",
     "markdown-it": "^9.1.0",
+    "markdown-it-emoji": "^2.0.0",
     "nanocomponent": "^6.5.2",
     "sheetify": "^7.4.0",
     "sheetify-cssnext": "^2.0.1",
