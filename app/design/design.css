@@ -163,10 +163,6 @@ body {
   height: 3.55rem;
 }
 
-.h-chat-open {
-  /* height: 12rem; */
-}
-
 .h-chat-sg {
   height: calc(100% - 41px)
 }
