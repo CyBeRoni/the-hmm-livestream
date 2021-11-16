@@ -28,6 +28,8 @@
   --c-yl: #ff0;
   --c-bl: blue;
   --c-bk: #000;
+  --c-gr5: #555;
+  --c-gr9: #999;
 }
 
 html { box-sizing: border-box }
@@ -142,7 +144,7 @@ body {
 }
 
 .mxw-headline {
-  max-width: 39rem; 
+  max-width: 39rem;
 }
 
 @media screen and (min-width: 42rem) {
@@ -153,7 +155,7 @@ body {
   .md-video-ar {
     height: calc((9 / 16) * 100vw);
     max-height: calc(100vh - 250px);
-    min-height: 480px;
+    min-height: 480%;
   }
 }
 
@@ -162,7 +164,7 @@ body {
 }
 
 .h-chat-open {
-  height: 12rem;
+  /* height: 12rem; */
 }
 
 .h-chat-sg {
@@ -184,7 +186,7 @@ body {
 }
 
 .l50 {
-  left: 50%; 
+  left: 50%;
 }
 
 .ttcc {
@@ -214,4 +216,13 @@ body {
 
 .mba {
   margin-bottom: auto;
+}
+
+.standalone {
+  font-size: 150%;
+}
+
+.chat-message img {
+  max-width: 210px;
+  max-height: 210px;
 }

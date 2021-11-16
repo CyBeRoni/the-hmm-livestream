@@ -11,6 +11,7 @@ app.use(devtools())
 app.use(require('./stores/stream'))
 
 app.route(settings.stream.url, require('./views/main'))
+app.route(`${settings.stream.url}/chat`, require('./views/chat'))
 app.route('*', require('./views/notfound'))
 
 if (!module.parent) app.mount('body')

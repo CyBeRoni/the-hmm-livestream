@@ -1,11 +1,7 @@
 const html = require('choo/html')
 const nc = require('nanocomponent')
 const raw = require('choo/html/raw')
-const md = require('markdown-it')({
-  breaks: true,
-  typographer: true,
-  linkify: true
-})
+
 const chatMsg = require('./chat-msg')
 const formatDate = require('../utils/formatDate')
 
@@ -15,7 +11,9 @@ class chat extends nc {
 
     this.state = null
     this.emit = null
-    this.data = {}
+    this.data = {
+      "hide_input": false
+    }
   }
 
   createElement (state, emit, data) {
@@ -25,14 +23,22 @@ class chat extends nc {
 
     const isChatMessageVisible = sessionStorage.getItem('username') !== null ? '' : 'dn '
 
-    return html`
+    if (data.hide_input){
+      return html`
       <div class="${data.toggle ? 'x xdc h100' : 'dn'}">
-        ${storage()}
         ${chatView(data)}
-        ${inputForm(data.view, isChatMessageVisible)}
-        <button type="button" onclick=${chatViewToggle(emit)} class="curp fs0-8 x xdr xafe pt0-5 pr1 pb0-5 pl0-5 bt-wh bgc-bl">${data.view ? 'Show chat' : 'Show only URLs'}</button>
       </div>
     `
+    } else {
+      return html`
+        <div class="${data.toggle ? 'x xdc h100' : 'dn'}">
+          ${storage()}
+          ${chatView(data)}
+          ${inputForm(data.view, isChatMessageVisible)}
+          <button type="button" onclick=${chatViewToggle(emit)} class="curp fs0-8 x xdr xafe pt0-5 pr1 pb0-5 pl0-5 bt-wh bgc-bl">${data.view ? 'Show chat' : 'Show only URLs'}</button>
+        </div>
+      `
+    }
 
     function inputForm (chatView, isChatMessageVisible) {
       if (chatView === false) {
@@ -40,7 +46,7 @@ class chat extends nc {
           <form onsubmit=${onsubmit} method="post" class="x xdc bt-wh bgc-bl mba">
             ${inputUsername(sessionStorage.getItem('username'))}
             <label class="${isChatMessageVisible}" for="chat-message"></label>
-            <textarea id="chat-message" name="chat-message" required onkeydown=${onsubmit} class="message ${isChatMessageVisible}w100 bgc-db px0-5 py0-25" style="resize:vertical" type="text" placeholder="Type here to send a message, then press Enter"></textarea>
+            <textarea id="chat-message" name="chat-message" required onkeydown=${onsubmit} class="message ${isChatMessageVisible} w100 bgc-db px0-5 py0-25" style="resize:vertical" type="text" placeholder="Type here to send a message, then press Enter"></textarea>
             <input class="curp pl0-5 dn md-psf md-t0 md-l-999" type="submit" value="Send">
           </form>
         `
@@ -102,15 +108,9 @@ class chat extends nc {
     }
 
     function msgList (data) {
-      if (data.length > 0) {
-        return data.map(msg => {
-          return chatMsg(msg)
-        })
-      } else {
-        return html`
-          <div><p class="pt1">No message yet.</p></div>
-        `
-      }
+      return data.map(msg => {
+        return chatMsg(msg)
+      });
     }
 
     function urlList (data) {
@@ -131,7 +131,7 @@ class chat extends nc {
       // run this only if Enter is pressed
       if (e.which === 13 && !e.shiftKey) {
         e.preventDefault()
-      
+
         const form = e.target.form
 
         const input_message = form.querySelector('.message')
@@ -147,12 +147,12 @@ class chat extends nc {
         state.components.socket.emit('chat-msg', msg)
 
         // clear input-message
-        input_message.value = '' 
+        input_message.value = ''
 
         // set correct chat-list height
-        const chatList = e.originalTarget.previousElementSibling
-        chatList.classList.remove('h-chat-db')
-        chatList.classList.add('h-chat-sg')
+        // const chatList = e.originalTarget.previousElementSibling
+        // chatList.classList.remove('h-chat-db')
+        // chatList.classList.add('h-chat-sg')
       }
     }
 
