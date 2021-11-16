@@ -1,0 +1,30 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"path": "app/",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "npm: build - app",
+			"detail": "Watchify"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "app/",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: start - app",
+			"detail": "Watchify",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			  }
+		}
+	]
+}

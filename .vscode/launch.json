@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/public/server.js",
+            "cwd": "${workspaceFolder}/public",
+            "env": {
+                "HOST": "0.0.0.0"
+            },
+
+            "serverReadyAction":{
+                "action": "startDebugging",
+                "pattern": "listening on 127.0.0.1:([0-9]+)",
+                "name": "Launch Browser"
+            }
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Browser",
+            "url": "http://localhost:4000/ScreenNewDeal/chat",
+            "trace": false,
+            "webRoot": "${workspaceFolder}",
+            "sourceMapPathOverrides": {
+                "*": "${workspaceFolder}/app/*"
+            },
+        }
+    ]
+}
