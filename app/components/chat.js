@@ -27,12 +27,10 @@ class chat extends nc {
       return html`
       <div class="${data.toggle ? 'x xdc h100' : 'dn'}">
         ${chatView(data)}
-      </div>
-    `
+      </div>`
     } else {
       return html`
         <div class="${data.toggle ? 'x xdc h100' : 'dn'}">
-          ${storage()}
           ${chatView(data)}
           ${inputForm(data.view, isChatMessageVisible)}
           <button type="button" onclick=${chatViewToggle(emit)} class="curp fs0-8 x xdr xafe pt0-5 pr1 pb0-5 pl0-5 bt-wh bgc-bl">${data.view ? 'Show chat' : 'Show only URLs'}</button>
@@ -153,37 +151,6 @@ class chat extends nc {
         // const chatList = e.originalTarget.previousElementSibling
         // chatList.classList.remove('h-chat-db')
         // chatList.classList.add('h-chat-sg')
-      }
-    }
-
-    function storageAvailable (type) {
-      try {
-        let storage = window[type]
-        let x = '__storage_test__'
-        storage.setItem(x, x)
-        storage.removeItem(x)
-        return true
-      } catch (e) {
-        return e instanceof DOMException && (
-          // everything except Firefox
-          e.code === 22 ||
-            // Firefox
-          e.code === 1014 ||
-            // test name field too, because code might not be present
-          // everything except Firefox
-          e.name === 'QuotaExceededError' ||
-            // Firefox
-          e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-          // acknowledge QuotaExceededError only if there's something already stored
-        storage.length !== 0
-      }
-    }
-
-    function storage () {
-      if (storageAvailable('localStorage')) {
-        // console.log('yes! we can use localstorage')
-      } else {
-        // console.log('no localStorage')
       }
     }
 
