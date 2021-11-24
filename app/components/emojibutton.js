@@ -3,6 +3,7 @@ import { EmojiButton } from '@joeattardi/emoji-button';
 const axios = require('axios').default;
 const html = require('choo/html');
 const Component = require('choo/component');
+const settings = require('../../public/settings.json')
 
 function initEmojiButton(customEmotes, element){
     let e = new EmojiButton({
@@ -20,6 +21,12 @@ function initEmojiButton(customEmotes, element){
             "--text-color": "white",
             "--category-button-active-color": "white",
             "--category-button-color": "#aaaaaa"
+        },
+        i18n: {
+            "categories": {
+                "smileys": "Smileys",
+                "custom": settings.subtitle
+            }
         },
         emojiData: {
             "categories":["smileys"],
