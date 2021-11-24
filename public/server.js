@@ -16,13 +16,16 @@ const http = require('http').Server(app)
 const socket = require('socket.io')(http)
 const nunjucks = require('nunjucks')
 const getURLfromPost = require('../app/utils/get-url-from-post')
-const { EmoteFetcher, EmoteParser } = require('@mkody/twitch-emoticons');
+const { EmoteFetcher, EmoteParser, Collection } = require('@mkody/twitch-emoticons');
 
 const emote_fetcher = new EmoteFetcher();
 const emote_parser = new EmoteParser(emote_fetcher, {
   type: 'markdown',
   match: /:?(\w+):?/g
 });
+
+var emotes = new Collection();
+
 
 
 
@@ -72,8 +75,9 @@ const initialize = async() => {
   }
 
   if (settings.bttv_channel){
-    emote_fetcher.fetchBTTVEmotes(settings.bttv_channel).then(() => {
-      console.log(`Fetched BTTV emotes for channel ${settings.bttv_channel}`);
+    emote_fetcher.fetchBTTVEmotes(settings.bttv_channel).then((res) => {
+      emotes = res;
+      console.log(`Fetched ${emotes.size} BTTV emotes for channel ${settings.bttv_channel}`);
     });
   }
 
@@ -101,6 +105,14 @@ app.get('/posts', async (req, res) => {
 		res.send(posts);
 	});
 });
+
+app.get('/emotes', async (req, res) => {
+  data = emotes.map((e) => {
+    return {"name": e.toString(), "emoji": e.toLink()}
+  })
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(data));
+})
 
 app.get('/posts/url', async(req, res) => {
 	db(adapter).then(db => {

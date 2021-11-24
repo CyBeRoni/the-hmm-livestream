@@ -1,9 +1,11 @@
-const html = require('choo/html')
-const nc = require('nanocomponent')
-const raw = require('choo/html/raw')
+const html = require('choo/html');
+const nc = require('nanocomponent');
+const raw = require('choo/html/raw');
 
-const chatMsg = require('./chat-msg')
-const formatDate = require('../utils/formatDate')
+const chatMsg = require('./chat-msg');
+const formatDate = require('../utils/formatDate');
+const emojiButtonComponent = require('./emojibutton');
+
 
 class chat extends nc {
   constructor (state, emit) {
@@ -22,6 +24,7 @@ class chat extends nc {
     this.data = data
 
     const isChatMessageVisible = sessionStorage.getItem('username') !== null ? '' : 'dn '
+    const emojiButton = new emojiButtonComponent('emojipicker', state, emit);
 
     if (data.hide_input){
       return html`
@@ -41,12 +44,15 @@ class chat extends nc {
     function inputForm (chatView, isChatMessageVisible) {
       if (chatView === false) {
         return html`
-          <form onsubmit=${onsubmit} method="post" class="x xdc bt-wh bgc-bl mba">
-            ${inputUsername(sessionStorage.getItem('username'))}
-            <label class="${isChatMessageVisible}" for="chat-message"></label>
-            <textarea id="chat-message" name="chat-message" required onkeydown=${onsubmit} class="message ${isChatMessageVisible} w100 bgc-db px0-5 py0-25" style="resize:vertical" type="text" placeholder="Type here to send a message, then press Enter"></textarea>
-            <input class="curp pl0-5 dn md-psf md-t0 md-l-999" type="submit" value="Send">
-          </form>
+          <div class="psr">
+            <form onsubmit=${onsubmit} class="x xdc bt-wh bgc-bl mba" method="post">
+              ${inputUsername(sessionStorage.getItem('username'))}
+              <label class="${isChatMessageVisible}" for="chat-message"></label>
+              <textarea id="chat-message" name="chat-message" required onkeydown=${onsubmit} class="message ${isChatMessageVisible} w100 bgc-db px0-5 py0-25" style="resize:vertical" type="text" placeholder="Type here to send a message, then press Enter"></textarea>
+              <!--<input class="curp pl0-5 dn md-psf md-t0 md-l-999" type="submit" value="Send">-->
+            </form>
+            ${emojiButton.render()}
+          </div>
         `
       }
     }
@@ -87,7 +93,6 @@ class chat extends nc {
 
     function setUsername (e) {
       // run this only if Enter is pressed
-      console.log('aa =>', e)
       if (e.which === 13) {
         e.preventDefault()
 
@@ -135,6 +140,9 @@ class chat extends nc {
         const input_message = form.querySelector('.message')
         const username = sessionStorage.getItem('username')
 
+        if (input_message.value.trim().length == 0)
+          return;
+
         const msg = {
           timestamp: new Date(),
           username: username,
@@ -159,8 +167,8 @@ class chat extends nc {
         emit('chat-view-toggle')
       }
     }
-
   }
+
 
   load (el) {
     if (this.state.components.chat.view === false) {

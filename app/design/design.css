@@ -222,3 +222,488 @@ body {
   max-width: 210px;
   max-height: 210px;
 }
+
+.emojipicker {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  right: 5px;
+  bottom: calc(50% - 15px);
+}
+
+
+@font-face {
+  font-family:'NotCourier';
+  src:url('/assets/fonts/NotCourierSans.woff2') format('woff2'),url('/assets/fonts/NotCourierSans.woff') format('woff'),url('/assets/fonts/NotCourierSans.otf') format('opentype');
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:"Arial Rounded MT Bold";
+  src:url("/assets/fonts/Arial Rounded Bold.woff2") format("woff2"),url("/assets/fonts/Arial Rounded Bold.woff") format("woff"),url("/assets/fonts/Arial Rounded Bold.otf") format("opentype");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:"Compagnon Roman";
+  src:url("/assets/fonts/Compagnon-Roman.woff2") format("woff2"),url("/assets/fonts/Compagnon-Roman.woff") format("woff"),url("/assets/fonts/Compagnon-Roman.otf") format("opentype");
+  font-style:normal;
+  font-weight:400;
+}
+
+:root {
+  --ft-ss: 'Arial', sans-serif;
+  --ft-sr: 'Arial Rounded MT Bold', sans-serif;
+  --ft-ms: 'Not Courier', monospace;
+  --ft-cr: 'Compagnon Roman', monospace;
+  --c-wh: #fff;
+  --c-yl: #ff0;
+  --c-bl: blue;
+  --c-bk: #000;
+  --c-gr5: #555;
+  --c-gr9: #999;
+}
+
+html { box-sizing: border-box }
+*, *:before, *:after { box-sizing: inherit }
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, input, button, figure, video { margin: 0; padding: 0 }
+
+a {
+  color: inherit;
+}
+
+input,
+textarea,
+button {
+  border: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: inherit;
+  color: inherit;
+  outline: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+  line-height: 1.1;
+  font-family: var(--ft-ss);
+  color: var(--c-bk);
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.copy p+p,
+.copy p+ul {
+  padding-top: 1rem;
+}
+
+.copy ul {
+  padding-bottom: 1rem;
+  padding-left: 2.5rem;
+  margin-left: -1.5rem;
+}
+
+.copy ul li {
+  padding-left: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.ft-ss {
+  font-family: var(--ft-ss);
+}
+
+.ft-sr {
+  font-family: var(--ft-sr);
+}
+
+.ft-ms {
+  font-family: var(--ft-ms);
+}
+
+.ft-cr {
+  font-family: var(--ft-cr);
+}
+
+.fs-headline {
+  font-size: 2rem;
+}
+
+.l-999 {
+  left: -999px;
+}
+
+.bsh-t {
+  box-shadow: 0 -1em 1em rgba(0,0,0,0.3)
+}
+
+.bsh-b {
+  box-shadow: 0 1em 1em rgba(0,0,0,0.3)
+}
+
+.br1 {
+  border-radius: 1rem;
+}
+
+.bsh {
+  box-shadow: 0 0 1em rgba(0,0,0,0.5)
+}
+
+.btlr {
+  border-top-left-radius: 1.5rem;
+}
+
+.video-ar {
+  height: calc((9 / 16) * 100vw);
+  max-height: calc(100vh - 250px);
+  min-height: 480px;
+}
+
+.mxw-headline {
+  max-width: 39rem;
+}
+
+@media screen and (min-width: 42rem) {
+  .md-w-chat {
+    width: 36%;
+  }
+
+  .md-video-ar {
+    height: calc((9 / 16) * 100vw);
+    max-height: calc(100vh - 250px);
+    min-height: 480%;
+  }
+}
+
+.h-chat {
+  height: 3.55rem;
+}
+
+.h-chat-sg {
+  height: calc(100% - 41px)
+}
+
+.h-chat-db {
+  height: calc(100% - 63px)
+}
+
+@media screen and (min-width: 900px) {
+  .md-w-chat {
+    width: 16.5rem;
+  }
+}
+
+.t50 {
+  top: 50%;
+}
+
+.l50 {
+  left: 50%;
+}
+
+.ttcc {
+  transform: translate(-50%, -50%)
+}
+
+.ow {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mxa {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.mla {
+  margin-left: auto;
+}
+
+.mba {
+  margin-bottom: auto;
+}
+
+.standalone {
+  font-size: 150%;
+}
+
+.chat-message img {
+  max-width: 210px;
+  max-height: 210px;
+}
+
+.emojipicker {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  right: 5px;
+  bottom: calc(50% - 15px);
+}
+
+
+@font-face {
+  font-family:'NotCourier';
+  src:url('/assets/fonts/NotCourierSans.woff2') format('woff2'),url('/assets/fonts/NotCourierSans.woff') format('woff'),url('/assets/fonts/NotCourierSans.otf') format('opentype');
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:"Arial Rounded MT Bold";
+  src:url("/assets/fonts/Arial Rounded Bold.woff2") format("woff2"),url("/assets/fonts/Arial Rounded Bold.woff") format("woff"),url("/assets/fonts/Arial Rounded Bold.otf") format("opentype");
+  font-style:normal;
+  font-weight:400;
+}
+
+@font-face {
+  font-family:"Compagnon Roman";
+  src:url("/assets/fonts/Compagnon-Roman.woff2") format("woff2"),url("/assets/fonts/Compagnon-Roman.woff") format("woff"),url("/assets/fonts/Compagnon-Roman.otf") format("opentype");
+  font-style:normal;
+  font-weight:400;
+}
+
+:root {
+  --ft-ss: 'Arial', sans-serif;
+  --ft-sr: 'Arial Rounded MT Bold', sans-serif;
+  --ft-ms: 'Not Courier', monospace;
+  --ft-cr: 'Compagnon Roman', monospace;
+  --c-wh: #fff;
+  --c-yl: #ff0;
+  --c-bl: blue;
+  --c-bk: #000;
+  --c-gr5: #555;
+  --c-gr9: #999;
+}
+
+html { box-sizing: border-box }
+*, *:before, *:after { box-sizing: inherit }
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, input, button, figure, video { margin: 0; padding: 0 }
+
+a {
+  color: inherit;
+}
+
+input,
+textarea,
+button {
+  border: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: inherit;
+  color: inherit;
+  outline: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+  line-height: 1.1;
+  font-family: var(--ft-ss);
+  color: var(--c-bk);
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.copy p+p,
+.copy p+ul {
+  padding-top: 1rem;
+}
+
+.copy ul {
+  padding-bottom: 1rem;
+  padding-left: 2.5rem;
+  margin-left: -1.5rem;
+}
+
+.copy ul li {
+  padding-left: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.ft-ss {
+  font-family: var(--ft-ss);
+}
+
+.ft-sr {
+  font-family: var(--ft-sr);
+}
+
+.ft-ms {
+  font-family: var(--ft-ms);
+}
+
+.ft-cr {
+  font-family: var(--ft-cr);
+}
+
+.fs-headline {
+  font-size: 2rem;
+}
+
+.l-999 {
+  left: -999px;
+}
+
+.bsh-t {
+  box-shadow: 0 -1em 1em rgba(0,0,0,0.3)
+}
+
+.bsh-b {
+  box-shadow: 0 1em 1em rgba(0,0,0,0.3)
+}
+
+.br1 {
+  border-radius: 1rem;
+}
+
+.bsh {
+  box-shadow: 0 0 1em rgba(0,0,0,0.5)
+}
+
+.btlr {
+  border-top-left-radius: 1.5rem;
+}
+
+.video-ar {
+  height: calc((9 / 16) * 100vw);
+  max-height: calc(100vh - 250px);
+  min-height: 480px;
+}
+
+.mxw-headline {
+  max-width: 39rem;
+}
+
+@media screen and (min-width: 42rem) {
+  .md-w-chat {
+    width: 36%;
+  }
+
+  .md-video-ar {
+    height: calc((9 / 16) * 100vw);
+    max-height: calc(100vh - 250px);
+    min-height: 480%;
+  }
+}
+
+.h-chat {
+  height: 3.55rem;
+}
+
+.h-chat-sg {
+  height: calc(100% - 41px)
+}
+
+.h-chat-db {
+  height: calc(100% - 63px)
+}
+
+@media screen and (min-width: 900px) {
+  .md-w-chat {
+    width: 16.5rem;
+  }
+}
+
+.t50 {
+  top: 50%;
+}
+
+.l50 {
+  left: 50%;
+}
+
+.ttcc {
+  transform: translate(-50%, -50%)
+}
+
+.ow {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mxa {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.mla {
+  margin-left: auto;
+}
+
+.mba {
+  margin-bottom: auto;
+}
+
+.standalone {
+  font-size: 150%;
+}
+
+.chat-message img {
+  max-width: 210px;
+  max-height: 210px;
+}
+
+.emojipicker {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  right: 5px;
+  bottom: calc(50% - 15px);
+}
+
+
+.emoji-picker__overlay {
+  z-index: -100 !important;
+}
+
+.emoji-picker__wrapper {
+  transform: translateZ(0.0001px);
+}

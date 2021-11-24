@@ -11,20 +11,24 @@
 			},
 			"problemMatcher": [],
 			"label": "npm: build - app",
-			"detail": "Watchify"
+			"detail": "Browserify"
 		},
 		{
 			"type": "npm",
 			"script": "start",
 			"path": "app/",
 			"group": "build",
-			"problemMatcher": [],
+			"isBackground": true,
 			"label": "npm: start - app",
 			"detail": "Watchify",
 			"presentation": {
 				"reveal": "always",
 				"panel": "new"
-			  }
+			},
+			"runOptions": {
+				"runOn": "folderOpen",
+				"instanceLimit": 1
+			}
 		}
 	]
 }
