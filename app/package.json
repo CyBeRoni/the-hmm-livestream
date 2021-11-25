@@ -6,7 +6,8 @@
   "scripts": {
     "start": "watchify --ignore-missing index.js -o ../public/assets/bundle.js --debug --verbose -p [ css-extract -o ../public/assets/bundle.css ] -p esmify",
     "build": "browserify --ignore-missing index.js -o ../public/assets/bundle.js --debug -p [ css-extract -o ../public/assets/bundle.css ] -p tinyify -p esmify",
-    "deploy": "browserify --ignore-missing index.js -o ../public/assets/bundle.js -p [ css-extract -o ../public/assets/bundle.css ] -p tinyify -p esmify"
+    "deploy": "browserify --ignore-missing index.js -o ../public/assets/bundle.js -p [ css-extract -o ../public/assets/bundle.css ] -p tinyify -p esmify",
+    "postdeploy": "purifycss ../public/assets/bundle.css ../public/assets/bundle.js -o ../public/assets/bundle.css --info"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "markdown-it": "^9.1.0",
     "markdown-it-emoji": "^2.0.0",
     "nanocomponent": "^6.5.2",
+    "purify-css": "^1.2.5",
     "sheetify": "^7.4.0",
     "sheetify-cssnext": "^2.0.1",
     "smarquee": "^1.0.5",
