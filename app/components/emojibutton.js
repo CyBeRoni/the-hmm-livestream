@@ -1,6 +1,5 @@
 
 import { EmojiButton } from '@joeattardi/emoji-button';
-const axios = require('axios').default;
 const html = require('choo/html');
 const Component = require('choo/component');
 const settings = require('../../public/settings.json')
@@ -139,21 +138,20 @@ module.exports = class emojiButton extends Component {
     }
 
     load (element) {
-        const self = this;
         this.local.element = element;
+
         if (this.local.emotes.length == 0){
-            axios.get('/emotes')
-                .then(function (response) {
-                self.local.emotes = response.data;
-            }.bind(this))
-            .catch(function (error) {
+            window.fetch('/emotes')
+            .then(async (response) => {
+                this.local.emotes = await response.json();
+            })
+            .catch((error) => {
                 console.log(error);
-            }.bind(this)).then(function() {
-                self.local.picker = initEmojiButton(this.local.emotes, element);
-            }.bind(this));
-        } else {
-            self.local.picker = initEmojiButton(this.local.emotes, element);
-        }
+            })
+            .finally(() => {
+                this.local.picker = initEmojiButton(this.local.emotes, element);
+            });
+         }
     }
 
     update(){
