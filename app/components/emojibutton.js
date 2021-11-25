@@ -101,14 +101,33 @@ function initEmojiButton(customEmotes, element){
     e.on('emoji', selection => {
         let elem = document.querySelector("#chat-message");
         if (! selection.custom){
-            elem.value += ` ${selection.emoji}`;
+            insertAtCaret(elem, selection.emoji);
         } else {
-            elem.value += ` ${selection.name}`;
+            insertAtCaret(elem, selection.name);
         }
     });
 
     return e;
 }
+
+function insertAtCaret (elem, text) {
+    text = text || '';
+    if (elem.selectionStart || elem.selectionStart === 0) {
+      let startPos = elem.selectionStart;
+      let endPos = elem.selectionEnd;
+      let before = elem.value.substring(0, startPos);
+      let after = elem.value.substring(endPos, elem.value.length);
+      let beforeSpace = before.endsWith(' ') || startPos == 0 ? 0 : 1;
+      let afterSpace = after.startsWith(' ') ? 0 : 1;
+      elem.value = before + (beforeSpace == 0 ? '' : ' ')
+                   + text +
+                   (afterSpace == 0 ? '' : ' ') + after;
+      elem.selectionStart = startPos + text.length + beforeSpace + afterSpace;
+      elem.selectionEnd = startPos + text.length + beforeSpace + afterSpace;
+    } else {
+      elem.value += text;
+    }
+};
 
 module.exports = class emojiButton extends Component {
     constructor (id, state, emit) {
